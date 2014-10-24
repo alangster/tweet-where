@@ -3,6 +3,10 @@ get '/' do
 end
 
 post '/' do 
-	
-	erb :_tweet, layout: false
+	# return params[:circle]
+	# recieving {circle: "latitude,longitude,radiuskm"}
+	response = CLIENT.get_tweets(params[:circle])
+	content_type :json
+	return response.body
+	# erb :_tweet, layout: false
 end

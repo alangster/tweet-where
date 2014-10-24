@@ -10,7 +10,7 @@ function Circle() {
 		var dlat = (latTwo - latOne).toRad();
 		var a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(latOne) * Math.cos(latTwo) * Math.pow(Math.sin(dlon / 2), 2);
 		var c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1 - a) );
-		// 6371 is the earth's radius, in km, so d is in km ( i think )
+		// 6371 is the earth's radius, in km, so d is in km
 		var d = 6371 * c;
 		return d * 1000;
 	};
@@ -38,7 +38,8 @@ function Circle() {
 	};
 
 	this.twitterCircle = function() {
-		return "" + centerCoord.latitude() + "," + centerCoord.longitude() + "," + radius + "m";
+		var radiusInKm = radius / 1000;
+		return "" + centerCoord.latitude() + "," + centerCoord.longitude() + "," + radiusInKm + "km";
 	};
 
 

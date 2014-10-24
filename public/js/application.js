@@ -1,6 +1,6 @@
 function App() {
   var circle = new Circle();
-  var intervalId;
+  var intervalId, sinceID;
   var view = new View();
   var map = new GMaps({
     el: '#map',
@@ -32,15 +32,16 @@ function App() {
     view.showReset();
   };
 
-  var tweets = function(twitterCircle) {
+  var tweets = function(twitterCircle, sinceID) {
     var data = { circle: twitterCircle }
     $.ajax({
       url: "/",
       type: "post",
       data: data,
-      dataType: "html",
+      dataType: "json",
       success: function(response) {
-        view.showTweets(response);
+        // set the value of sinceID here
+        console.log(response);
       }
     });
   };
