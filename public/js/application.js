@@ -1,5 +1,5 @@
 function App() {
-  var poly = new Polygon();
+  var circle = new Circle();
   var intervalId;
   var view = new View();
   var map = new GMaps({
@@ -17,9 +17,10 @@ function App() {
     overviewMapControl: false
   });
 
-  var adjustMap = function(path) {
-    map.drawPolygon({
-      paths: path,
+  var adjustMap = function(circle) {
+    map.drawCircle({
+      center: circle.center(),
+      radius: circle.radius(),
       strokeColor: '#33CCFF',
       strokeOpacity: 1,
       strokeWeight: 1,
@@ -31,8 +32,8 @@ function App() {
     view.showReset();
   };
 
-  var tweets = function(twitterBox) {
-    var data = { coords: twitterBox.join() }
+  var tweets = function(twitterCircle) {
+    var data = { circle: twitterCircle }
     $.ajax({
       url: "/",
       type: "post",
@@ -42,7 +43,6 @@ function App() {
         view.showTweets(response);
       }
     });
-    console.log(data);
   };
 
   this.initialize = function() {
@@ -59,20 +59,20 @@ function App() {
     });
     map.on('click', function(e) {
       var lat = e.latLng.lat(), lng = e.latLng.lng();
-      poly.newCoord(new Coord(lat, lng));
+      circle.newCoord(new Coord(lat, lng));
       map.addMarker({
         lat: lat,
         lng: lng
       });
-      if (poly.hasPair()) {
-        adjustMap(poly.path());
+      if (circle.hasPair()) {
+        adjustMap(circle);
         // set interval for calling tweets(), then start calling it
-        intervalId = setInterval(function() { tweets(poly.twitterBox()) }, 1000);
+        intervalId = setInterval(function() { tweets(circle.twitterCircle()) }, 1000);
         // console.log(intervalId);
         view.reset().on('click', function() {
           clearInterval(intervalId);
           view.hideReset();
-          map.refresh();
+          // map.refresh(); // THIS DOES NOT WORK
         });
       };
     });

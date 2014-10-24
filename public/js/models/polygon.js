@@ -1,35 +1,18 @@
-function Polygon() {
-	var coordinatePairs = [];
+function Circle() {
 	var coordObjects = [];
-	var north, south, east, west, southWest, northEast
+	var centerCoord, radius;
 
-	var completeSet = function() {
-		findEastAndWest();
-		findNorthAndSouth();
-		coordinatePairs.push([south, west]);
-		coordinatePairs.push([north, west]);
-		coordinatePairs.push([north, east]);
-		coordinatePairs.push([south, east]);
-	};
-
-	var findEastAndWest = function() {
-		if (coordObjects[0].longitude() > coordObjects[1].longitude()) {
-			east = coordObjects[0].longitude();
-			west = coordObjects[1].longitude();
-		} else {
-			east = coordObjects[1].longitude();
-			west = coordObjects[0].longitude();
-		};
-	};
-
-	var findNorthAndSouth = function() {
-		if (coordObjects[0].latitude() > coordObjects[1].latitude()) {
-			north = coordObjects[0].latitude();
-			south = coordObjects[1].latitude();
-		} else {
-			north = coordObjects[1].latitude();
-			south = coordObjects[0].latitude();
-		};
+	var distanceApart = function() {
+		// edgeCoord = 2; centerCoord = 1
+		var edgeCoord = coordObjects[1];
+		var latOne = centerCoord.latitude().toRad(), latTwo = edgeCoord.latitude().toRad(), longOne = centerCoord.longitude(), longTwo = edgeCoord.longitude();
+		var dlon = (longTwo - longOne).toRad();
+		var dlat = (latTwo - latOne).toRad();
+		var a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(latOne) * Math.cos(latTwo) * Math.pow(Math.sin(dlon / 2), 2);
+		var c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1 - a) );
+		// 6371 is the earth's radius, in km, so d is in km ( i think )
+		var d = 6371 * c;
+		return d * 1000;
 	};
 
 	this.newCoord = function(coord) {
@@ -38,23 +21,31 @@ function Polygon() {
 
 	this.hasPair = function() {
 		if (coordObjects.length === 2) {
-			completeSet();
 			return true;
 		} else {
 			return false;
 		};
 	};
 
-	this.path = function() {
-		return coordinatePairs;
+	this.center = function() {
+		centerCoord = coordObjects[0];
+		return { lat: centerCoord.latitude(), lng: centerCoord.longitude() };
 	};
 
-	this.twitterBox = function() {
-		var box = [];
-		box.push(south);
-		box.push(west);
-		box.push(north);
-		box.push(east);
-		return box;
-	}
+	this.radius = function() {
+		if (radius === undefined) { radius = distanceApart(); };
+		return 2 * radius;
+	};
+
+	this.twitterCircle = function() {
+		return "" + centerCoord.latitude() + "," + centerCoord.longitude() + "," + radius + "m";
+	};
+
+
+}
+
+if (typeof(Number.prototype.toRad) === "undefined") {
+  Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+  }
 }

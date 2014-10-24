@@ -1,17 +1,17 @@
-require 'uri'
-require 'net/http'
-require 'simple_oauth'
+# require 'uri'
+# require 'net/http'
+# require 'simple_oauth'
 
-class OAuthClient
+# class OAuthClient
 	
-	attr_reader :credentials
+# 	attr_reader :credentials
 
-	def initialize(credentials)
-		@credentials = credentials
-	end
+# 	def initialize(credentials)
+# 		@credentials = credentials
+# 	end
 
-	def get_tweets(coords)
+# 	def get_tweets(coords)
 		
-	end
+# 	end
 
-end
+# end
