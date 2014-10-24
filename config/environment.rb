@@ -10,7 +10,7 @@ require 'rubygems'
 
 require 'uri'
 require 'pathname'
-
+require 'simple_oauth'
 require 'pg'
 require 'active_record'
 require 'logger'
@@ -43,3 +43,17 @@ Dir[APP_ROOT.join('app', 'helpers', '*.rb')].each { |file| require file }
 
 # Set up the database and models
 require APP_ROOT.join('config', 'database')
+
+env_config = YAML.load_file(APP_ROOT.join('config', 'keys.yaml'))
+
+env_config.each do |key, value|
+	ENV[key] = value
+end
+
+CLIENT = OAuthClient.new(
+	consumer_key: ENV['TWITTER_KEY'],
+	consumer_secret: ENV['TWITTER_SECRET'],
+	token: ENV['TOKEN'],
+	token_secret: ENV['TOKEN_SECRET']
+)
+

@@ -13,6 +13,8 @@ gem 'activerecord', '~>4.1'
 
 gem 'rake'
 
+gem 'simple_oauth'
+
 gem 'shotgun'
 
 group :test do

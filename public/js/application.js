@@ -32,10 +32,17 @@ function App() {
   };
 
   var tweets = function(twitterBox) {
-    // check whether or not reset has been clicked
-    // if not, make ajax call
-    // continue this process until reset has been clicked
-    console.log(twitterBox);
+    var data = { coords: twitterBox.join() }
+    $.ajax({
+      url: "/",
+      type: "post",
+      data: data,
+      dataType: "html",
+      success: function(response) {
+        view.showTweets(response);
+      }
+    });
+    console.log(data);
   };
 
   this.initialize = function() {
@@ -62,6 +69,11 @@ function App() {
         // set interval for calling tweets(), then start calling it
         intervalId = setInterval(function() { tweets(poly.twitterBox()) }, 1000);
         // console.log(intervalId);
+        view.reset().on('click', function() {
+          clearInterval(intervalId);
+          view.hideReset();
+          map.refresh();
+        });
       };
     });
   };
