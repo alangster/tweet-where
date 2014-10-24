@@ -40,13 +40,15 @@ body {
 #reset {
 	width: 9em;
 	height: 3em;
-	bottom: 9em;
-	left: 11.6em;
+	float: right;
 	z-index: 9;
 	position: relative;
+	top: 18em;
+	left: 16.5em;
+	display: none;
 }
 
-button {
+#reset button {
 	height: 100%;
 	width: 100%;
 	border-radius: 0.2em;

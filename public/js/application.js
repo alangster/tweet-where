@@ -1,6 +1,7 @@
-
-$(document).ready(function() {
-	var poly = new Polygon();
+function App() {
+  var poly = new Polygon();
+  var intervalId;
+  var view = new View();
   var map = new GMaps({
     el: '#map',
     lat: 0,
@@ -16,37 +17,59 @@ $(document).ready(function() {
     overviewMapControl: false
   });
 
-  GMaps.geolocate({
-	  success: function(position){
-	    map.setCenter(position.coords.latitude, position.coords.longitude);
-	  },
-	  error: function(error){
-	    alert('Geolocation failed: '+error.message);
-	  },
-	  not_supported: function(){
-	    alert("Your browser does not support geolocation");
-	  }
-  });
+  var adjustMap = function(path) {
+    map.drawPolygon({
+      paths: path,
+      strokeColor: '#33CCFF',
+      strokeOpacity: 1,
+      strokeWeight: 1,
+      fillColor: '#33CCFF',
+      fillOpacity: 0.6
+    });
+    map.removeMarkers();
+    map.off('click');
+    view.showReset();
+  };
 
-  map.on('click', function(e) {
-  	var lat = e.latLng.lat(), lng = e.latLng.lng();
-  	poly.newCoord(new Coord(lat, lng));
-  	map.addMarker({
-			lat: lat,
-  		lng: lng
-  	});
-  	if (poly.hasPair()) {
-  		map.drawPolygon({
-  			paths: poly.path(),
-  			strokeColor: '#33CCFF',
-  			strokeOpacity: 1,
-  			strokeWeight: 1,
-  			fillColor: '#33CCFF',
-  			fillOpacity: 0.6
-  		});
-  		map.removeMarkers();
-  		map.off('click');
-  		console.log(poly.twitterBox());
-  	};
-  });
-});
+  var tweets = function(twitterBox) {
+    // check whether or not reset has been clicked
+    // if not, make ajax call
+    // continue this process until reset has been clicked
+    console.log(twitterBox);
+  };
+
+  this.initialize = function() {
+    GMaps.geolocate({
+      success: function(position){
+        map.setCenter(position.coords.latitude, position.coords.longitude);
+      },
+      error: function(error){
+        alert('Geolocation failed: '+error.message);
+      },
+      not_supported: function(){
+        alert("Your browser does not support geolocation");
+      }     
+    });
+    map.on('click', function(e) {
+      var lat = e.latLng.lat(), lng = e.latLng.lng();
+      poly.newCoord(new Coord(lat, lng));
+      map.addMarker({
+        lat: lat,
+        lng: lng
+      });
+      if (poly.hasPair()) {
+        adjustMap(poly.path());
+        // set interval for calling tweets(), then start calling it
+        intervalId = setInterval(function() { tweets(poly.twitterBox()) }, 1000);
+        // console.log(intervalId);
+      };
+    });
+  };
+}
+
+
+
+
+
+
+
