@@ -2,6 +2,13 @@ function View() {
 
 	var reset = $('#reset');
 
+	var display = function(formattedTweets) {
+		for (var i = 0; i < formattedTweets.length; i++) {
+			$('#tweets').html(formattedTweets[i]);
+			sleep(500, waitHelper());
+		}
+	};
+
 	this.showReset = function() {
 	  reset.show();
 	};
@@ -14,8 +21,17 @@ function View() {
 		reset.hide();
 	}
 
-	this.showTweets = function(tweets) {
-		$('#tweets').append(tweets);
+	this.formatTweets = function(tweets) {
+		var formattedTweets = [];
+		for (var i = 0; i < tweets.length; i++) {
+			formattedTweets.push("<p>" + tweets[i] + "</p>");
+		}
+		display(formattedTweets);
 	}
-
 };
+
+function sleep(millis, callback) {
+	setTimeout(function() {callback;}, millis);
+}
+
+function waitHelper() { "a"; };

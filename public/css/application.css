@@ -54,3 +54,7 @@ body {
 	border-radius: 0.2em;
 	color: white;
 }
+
+#tweets p {
+	color: white;
+}

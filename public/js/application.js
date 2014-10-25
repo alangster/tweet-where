@@ -1,6 +1,7 @@
 function App() {
   var circle = new Circle();
   var intervalId, sinceID;
+  var waitingTweets = [];
   var view = new View();
   var map = new GMaps({
     el: '#map',
@@ -32,8 +33,8 @@ function App() {
     view.showReset();
   };
 
-  var tweets = function(twitterCircle, sinceID) {
-    var data = { circle: twitterCircle }
+  var tweets = function(twitterCircle) {
+    var data = { circle: twitterCircle, sinceID: sinceID }
     $.ajax({
       url: "/",
       type: "post",
@@ -41,10 +42,30 @@ function App() {
       dataType: "json",
       success: function(response) {
         // set the value of sinceID here
-        console.log(response);
+        // sinceID = id of last tweet in response
+        extractTweets(response["statuses"]);
+        // console.log(response["statuses"]);
+      },
+      error: function() {
+        alert("ERROR");
       }
     });
   };
+
+  var extractTweets = function(statuses) {
+    for (var i = 0; i < statuses.length; i++) {
+      waitingTweets.push(statuses[i]["text"]);
+      // waitingTweets.push([statuses[i]["text"], statuses[i]["created_at"]]);
+      if ( i === statuses.length - 1 ) { 
+        sinceID = statuses[i]["id_str"]; 
+      };
+    }
+    // sinceID = statuses[i]["id_str"];
+    // console.log(waitingTweets);
+    // console.log(sinceID);
+    view.formatTweets(waitingTweets);
+    while (waitingTweets.length > 0 ) { waitingTweets.pop(); };
+  }
 
   this.initialize = function() {
     GMaps.geolocate({
@@ -68,7 +89,7 @@ function App() {
       if (circle.hasPair()) {
         adjustMap(circle);
         // set interval for calling tweets(), then start calling it
-        intervalId = setInterval(function() { tweets(circle.twitterCircle()) }, 1000);
+        intervalId = setInterval(function() { tweets(circle.twitterCircle()) }, 15000);
         // console.log(intervalId);
         view.reset().on('click', function() {
           clearInterval(intervalId);

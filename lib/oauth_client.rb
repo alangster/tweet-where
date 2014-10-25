@@ -10,8 +10,10 @@ class OAuthClient
     @credentials = credentials
   end
 
-  def get_tweets(circle, since = nil)
-    url = "https://api.twitter.com/1.1/search/tweets.json?q=e&geocode=" + circle
+  def get_tweets(circle, since)
+    url = "https://api.twitter.com/1.1/search/tweets.json?q=e&geocode=#{circle}"
+    url += "&since_id=#{since.to_s}" if !since.nil?
+
     uri = URI(url)
     request = Net::HTTP::Get.new(uri)
     request["Authorization"] = oauth_header_get(request)
