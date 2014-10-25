@@ -4,8 +4,7 @@ function View() {
 
 	var display = function(formattedTweets) {
 		for (var i = 0; i < formattedTweets.length; i++) {
-			$('#tweets').html(formattedTweets[i]);
-			sleep(500, waitHelper());
+			sleep(2000 * i, formattedTweets[i], function(data) {$('#tweets').prepend(data).fadeIn("slow")});
 		}
 	};
 
@@ -30,8 +29,7 @@ function View() {
 	}
 };
 
-function sleep(millis, callback) {
-	setTimeout(function() {callback;}, millis);
+function sleep(millis, data, callback) {
+	setTimeout(function() {callback(data);}, millis);
 }
 
-function waitHelper() { "a"; };

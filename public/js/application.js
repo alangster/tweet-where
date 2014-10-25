@@ -35,6 +35,8 @@ function App() {
 
   var tweets = function(twitterCircle) {
     var data = { circle: twitterCircle, sinceID: sinceID }
+    console.log("intervalId: " + intervalId + " time: " + current_time());
+    console.log("MAKING THE AJAX CALL");
     $.ajax({
       url: "/",
       type: "post",
@@ -44,7 +46,6 @@ function App() {
         // set the value of sinceID here
         // sinceID = id of last tweet in response
         extractTweets(response["statuses"]);
-        // console.log(response["statuses"]);
       },
       error: function() {
         alert("ERROR");
@@ -54,15 +55,11 @@ function App() {
 
   var extractTweets = function(statuses) {
     for (var i = 0; i < statuses.length; i++) {
-      waitingTweets.push(statuses[i]["text"]);
-      // waitingTweets.push([statuses[i]["text"], statuses[i]["created_at"]]);
+      waitingTweets.push(statuses[i]["text"]); 
       if ( i === statuses.length - 1 ) { 
         sinceID = statuses[i]["id_str"]; 
       };
     }
-    // sinceID = statuses[i]["id_str"];
-    // console.log(waitingTweets);
-    // console.log(sinceID);
     view.formatTweets(waitingTweets);
     while (waitingTweets.length > 0 ) { waitingTweets.pop(); };
   }
@@ -89,8 +86,8 @@ function App() {
       if (circle.hasPair()) {
         adjustMap(circle);
         // set interval for calling tweets(), then start calling it
+        tweets(circle.twitterCircle());
         intervalId = setInterval(function() { tweets(circle.twitterCircle()) }, 15000);
-        // console.log(intervalId);
         view.reset().on('click', function() {
           clearInterval(intervalId);
           view.hideReset();
@@ -100,6 +97,11 @@ function App() {
     });
   };
 }
+
+var current_time = function() {
+  var now = new Date();
+  return now.getMinutes() + ":" + now.getSeconds();
+};
 
 
 

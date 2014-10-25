@@ -7,7 +7,5 @@ post '/' do
 	# recieving {circle: "latitude,longitude,radiuskm"}
 	response = CLIENT.get_tweets(params[:circle], params[:sinceID])
 	content_type :json
-	# return response
 	return response.body 
-	# erb :_tweet, layout: false
 end

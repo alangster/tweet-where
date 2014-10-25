@@ -3,8 +3,8 @@ body {
 }
 
 #map {
-	float: right;
-	position: relative;
+	float: right;	
+	position: fixed;
 	right: 4em;
 	top: 1em;
 	bottom: 2em;
@@ -23,8 +23,8 @@ body {
 	top: 2em;
 	width: 30em;
 	height: 19em;
-	border-radius: 0.5em;
-	border: 1px solid #909090;
+/* 	border-radius: 0.5em; */
+/* 	border: 1px solid #909090; */
 }
 
 #title {
@@ -32,7 +32,7 @@ body {
 	position: relative;
 	bottom: -4.3em;
 	left: 9em;
-	border: 1px solid #909090;
+/* 	border: 1px solid #909090; */
 	height: 10em;
 	width: 20em;
 }
@@ -57,4 +57,5 @@ body {
 
 #tweets p {
 	color: white;
+	font-family: 'Cabin', sans-serif;
 }
